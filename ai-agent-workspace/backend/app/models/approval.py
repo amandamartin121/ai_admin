@@ -2,8 +2,8 @@
 ApprovalRequest model for agent tool approval workflow.
 """
 
-from sqlalchemy import Column
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID, String, Text, Boolean, ForeignKey, Index, Enum as SQLEnum, DateTime
+from sqlalchemy import Column, String, Text, Boolean, ForeignKey, Index, DateTime, Enum as SQLEnum
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy import JSON as SAJSON
 import enum

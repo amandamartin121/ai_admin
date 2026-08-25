@@ -2,8 +2,8 @@
 LLMProvider and LLMModel models for AI provider configuration.
 """
 
-from sqlalchemy import Column
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID, String, Text, Boolean, ForeignKey, Index, UniqueConstraint, Float, Integer
+from sqlalchemy import Column, String, Text, Boolean, ForeignKey, Index, UniqueConstraint, Float, Integer
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy import JSON as SAJSON
 
