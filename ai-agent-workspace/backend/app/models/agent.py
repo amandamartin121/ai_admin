@@ -13,7 +13,7 @@ from sqlalchemy import (
     Enum as SQLEnum,
 )
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import JSON as SAJSON
 import enum
 
 from app.models.base import Base, PrimaryKeyMixin, TimestampMixin
@@ -51,7 +51,7 @@ class Tool(Base, PrimaryKeyMixin, TimestampMixin):
 
     name = Column(String(100), unique=True, nullable=False)
     description = Column(Text, nullable=False)
-    schema_json = Column(JSONB, nullable=False)  # JSON Schema for parameters
+    schema_json = Column(SAJSON, nullable=False)  # JSON Schema for parameters
     permission_required = Column(String(100), nullable=True)  # Permission name
     risk_level = Column(SQLEnum(RiskLevel), default=RiskLevel.LOW, nullable=False)
     is_enabled = Column(Boolean, default=True, nullable=False)
@@ -79,7 +79,7 @@ class Agent(Base, PrimaryKeyMixin, TimestampMixin):
     description = Column(Text, nullable=True)
     system_prompt = Column(Text, nullable=True)
     is_default = Column(Boolean, default=False, nullable=False)
-    allowed_tools = Column(JSONB, nullable=True)  # List of tool IDs
+    allowed_tools = Column(SAJSON, nullable=True)  # List of tool IDs
 
     # Relationships
     runs = relationship("AgentRun", back_populates="agent")
@@ -107,7 +107,7 @@ class AgentRun(Base, PrimaryKeyMixin, TimestampMixin):
     total_steps = Column(Integer, nullable=True)
     result = Column(Text, nullable=True)
     error_message = Column(Text, nullable=True)
-    metadata_json = Column(JSONB, nullable=True)
+    metadata_json = Column(SAJSON, nullable=True)
 
     # Relationships
     conversation = relationship("Conversation", back_populates="agent_runs")
@@ -141,8 +141,8 @@ class AgentStep(Base, PrimaryKeyMixin, TimestampMixin):
     step_type = Column(String(50), nullable=False)  # 'thinking', 'tool_call', 'observation', etc.
     description = Column(Text, nullable=False)
     tool_id = Column(String(36), ForeignKey("tools.id", ondelete="SET NULL"), nullable=True)
-    tool_input = Column(JSONB, nullable=True)
-    tool_output = Column(JSONB, nullable=True)
+    tool_input = Column(SAJSON, nullable=True)
+    tool_output = Column(SAJSON, nullable=True)
     status = Column(String(20), default="pending", nullable=False)
     duration_ms = Column(Integer, nullable=True)
     error_message = Column(Text, nullable=True)
@@ -177,8 +177,8 @@ class ToolExecution(Base, PrimaryKeyMixin, TimestampMixin):
         String(36), ForeignKey("agent_steps.id", ondelete="CASCADE"), nullable=False
     )
     tool_id = Column(String(36), ForeignKey("tools.id", ondelete="CASCADE"), nullable=False)
-    input_data = Column(JSONB, nullable=False)
-    output_data = Column(JSONB, nullable=True)
+    input_data = Column(SAJSON, nullable=False)
+    output_data = Column(SAJSON, nullable=True)
     status = Column(String(20), default="pending", nullable=False)
     duration_ms = Column(Integer, nullable=True)
     error_message = Column(Text, nullable=True)

@@ -14,7 +14,7 @@ from sqlalchemy import (
     UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import JSON as SAJSON
 
 from app.models.base import Base, PrimaryKeyMixin, TimestampMixin
 
@@ -70,7 +70,7 @@ class Message(Base, PrimaryKeyMixin, TimestampMixin):
     parent_message_id = Column(
         String(36), ForeignKey("messages.id", ondelete="SET NULL"), nullable=True
     )
-    metadata_json = Column(JSONB, nullable=True)  # Additional message metadata
+    metadata_json = Column(SAJSON, nullable=True)  # Additional message metadata
 
     # Relationships
     conversation = relationship("Conversation", back_populates="messages")
