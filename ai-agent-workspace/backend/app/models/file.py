@@ -3,7 +3,8 @@ File model for user-uploaded files.
 """
 
 from sqlalchemy import Column
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID, String, Integer, Boolean, ForeignKey, Index
+from sqlalchemy import String, Integer, Boolean, ForeignKey, Index
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base, PrimaryKeyMixin, TimestampMixin

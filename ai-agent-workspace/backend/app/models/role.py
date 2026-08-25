@@ -96,7 +96,7 @@ class RolePermission(Base, PrimaryKeyMixin, TimestampMixin):
 
     role_id = Column(PG_UUID(as_uuid=False), ForeignKey("roles.id", ondelete="CASCADE"), nullable=False)
     permission_id = Column(
-        String(36), ForeignKey("permissions.id", ondelete="CASCADE"), nullable=False
+        PG_UUID(as_uuid=False), ForeignKey("permissions.id", ondelete="CASCADE"), nullable=False
     )
 
     # Relationships
