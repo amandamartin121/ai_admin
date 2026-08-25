@@ -1,4 +1,9 @@
 ```
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
 # Python
 __pycache__/
 *.py[cod]
@@ -20,13 +25,12 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
-# Virtual environments
-venv/
-env/
-ENV/
-.venv/
-.env/
+# Environment
+.env
+.env.local
+.env.*
 
 # IDE
 .vscode/
@@ -34,35 +38,16 @@ ENV/
 *.swp
 *.swo
 
-# Logs
-*.log
-
-# Environment variables
-.env
-.env.local
-*.env.*
-
-# Coverage reports
-.coverage
-htmlcov/
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-cover/
-
-# Temporary files
-*.tmp
-*.temp
-*~
+# OS
 .DS_Store
 Thumbs.db
 
-# Build outputs
-target/
-.mypy_cache/
-.pytest_cache/
-.tox/
+# Logs
+*.log
+
+# Coverage
+.coverage
+htmlcov/
+.coverage.*
+.coverage
 ```

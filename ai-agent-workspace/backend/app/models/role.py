@@ -3,6 +3,7 @@ Role and Permission models for RBAC system.
 """
 
 from sqlalchemy import Column, String, Boolean, ForeignKey, UniqueConstraint, Index
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base, PrimaryKeyMixin, TimestampMixin
@@ -68,8 +69,8 @@ class UserRole(Base, PrimaryKeyMixin, TimestampMixin):
 
     __tablename__ = "user_roles"
 
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    role_id = Column(String(36), ForeignKey("roles.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(PG_UUID(as_uuid=False), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    role_id = Column(PG_UUID(as_uuid=False), ForeignKey("roles.id", ondelete="CASCADE"), nullable=False)
 
     # Relationships
     user = relationship("User", back_populates="roles")
@@ -93,7 +94,7 @@ class RolePermission(Base, PrimaryKeyMixin, TimestampMixin):
 
     __tablename__ = "role_permissions"
 
-    role_id = Column(String(36), ForeignKey("roles.id", ondelete="CASCADE"), nullable=False)
+    role_id = Column(PG_UUID(as_uuid=False), ForeignKey("roles.id", ondelete="CASCADE"), nullable=False)
     permission_id = Column(
         String(36), ForeignKey("permissions.id", ondelete="CASCADE"), nullable=False
     )

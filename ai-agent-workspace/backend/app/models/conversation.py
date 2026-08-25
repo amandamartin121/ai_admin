@@ -4,6 +4,7 @@ Conversation and Message models for chat functionality.
 
 from sqlalchemy import (
     Column,
+    Column,
     String,
     Text,
     Boolean,
@@ -13,6 +14,7 @@ from sqlalchemy import (
     Index,
     UniqueConstraint,
 )
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy import JSON as SAJSON
 
@@ -28,7 +30,7 @@ class Conversation(Base, PrimaryKeyMixin, TimestampMixin):
 
     __tablename__ = "conversations"
 
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(PG_UUID(as_uuid=False), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     title = Column(String(255), nullable=False, default="New Conversation")
     is_archived = Column(Boolean, default=False, nullable=False)
     mode = Column(String(20), default="chat", nullable=False)  # 'chat' or 'agent'
@@ -105,7 +107,7 @@ class MessageAttachment(Base, PrimaryKeyMixin, TimestampMixin):
     message_id = Column(
         String(36), ForeignKey("messages.id", ondelete="CASCADE"), nullable=False
     )
-    file_id = Column(String(36), ForeignKey("files.id", ondelete="CASCADE"), nullable=False)
+    file_id = Column(PG_UUID(as_uuid=False), ForeignKey("files.id", ondelete="CASCADE"), nullable=False)
 
     # Relationships
     message = relationship("Message", back_populates="attachments")

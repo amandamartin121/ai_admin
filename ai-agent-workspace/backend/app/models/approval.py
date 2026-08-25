@@ -2,7 +2,8 @@
 ApprovalRequest model for agent tool approval workflow.
 """
 
-from sqlalchemy import Column, String, Text, Boolean, ForeignKey, Index, Enum as SQLEnum, DateTime
+from sqlalchemy import Column
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, String, Text, Boolean, ForeignKey, Index, Enum as SQLEnum, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy import JSON as SAJSON
 import enum
@@ -35,14 +36,14 @@ class ApprovalRequest(Base, PrimaryKeyMixin, TimestampMixin):
     step_id = Column(
         String(36), ForeignKey("agent_steps.id", ondelete="CASCADE"), nullable=True
     )
-    tool_id = Column(String(36), ForeignKey("tools.id", ondelete="CASCADE"), nullable=False)
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    tool_id = Column(PG_UUID(as_uuid=False), ForeignKey("tools.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(PG_UUID(as_uuid=False), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     action_description = Column(Text, nullable=False)
     risk_level = Column(String(20), nullable=False)
     status = Column(
         SQLEnum(ApprovalStatus), default=ApprovalStatus.PENDING, nullable=False
     )
-    approved_by = Column(String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    approved_by = Column(PG_UUID(as_uuid=False), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     approved_at = Column(DateTime, nullable=True)
     expires_at = Column(DateTime, nullable=False)
     metadata_json = Column(SAJSON, nullable=True)

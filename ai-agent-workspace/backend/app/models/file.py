@@ -2,7 +2,8 @@
 File model for user-uploaded files.
 """
 
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, Index
+from sqlalchemy import Column
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, String, Integer, Boolean, ForeignKey, Index
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base, PrimaryKeyMixin, TimestampMixin
@@ -17,7 +18,7 @@ class File(Base, PrimaryKeyMixin, TimestampMixin):
 
     __tablename__ = "files"
 
-    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(PG_UUID(as_uuid=False), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     filename = Column(String(255), nullable=False)
     original_filename = Column(String(255), nullable=False)
     mime_type = Column(String(100), nullable=False)

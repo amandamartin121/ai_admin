@@ -2,7 +2,8 @@
 AuditLog model for security and compliance logging.
 """
 
-from sqlalchemy import Column, String, Text, ForeignKey, Index, DateTime, JSON as SAJSON
+from sqlalchemy import Column
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, String, Text, ForeignKey, Index, DateTime, JSON as SAJSON
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base, PrimaryKeyMixin, TimestampMixin
@@ -58,7 +59,7 @@ class AuditLog(Base, PrimaryKeyMixin, TimestampMixin):
     )
     action = Column(String(50), nullable=False, index=True)
     resource_type = Column(String(50), nullable=True)
-    resource_id = Column(String(36), nullable=True)
+    resource_id = Column(PG_UUID(as_uuid=False), nullable=True)
     ip_address = Column(String(45), nullable=True)
     user_agent = Column(String(500), nullable=True)
     status = Column(String(20), default="success", nullable=False)  # success, failure, denied

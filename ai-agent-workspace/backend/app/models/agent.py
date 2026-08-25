@@ -12,6 +12,7 @@ from sqlalchemy import (
     Index,
     Enum as SQLEnum,
 )
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy import JSON as SAJSON
 import enum
@@ -100,7 +101,7 @@ class AgentRun(Base, PrimaryKeyMixin, TimestampMixin):
     conversation_id = Column(
         String(36), ForeignKey("conversations.id", ondelete="CASCADE"), nullable=False
     )
-    agent_id = Column(String(36), ForeignKey("agents.id", ondelete="SET NULL"), nullable=True)
+    agent_id = Column(PG_UUID(as_uuid=False), ForeignKey("agents.id", ondelete="SET NULL"), nullable=True)
     user_request = Column(Text, nullable=False)
     status = Column(SQLEnum(AgentStatus), default=AgentStatus.PENDING, nullable=False)
     current_step = Column(Integer, default=0, nullable=False)
@@ -140,7 +141,7 @@ class AgentStep(Base, PrimaryKeyMixin, TimestampMixin):
     step_number = Column(Integer, nullable=False)
     step_type = Column(String(50), nullable=False)  # 'thinking', 'tool_call', 'observation', etc.
     description = Column(Text, nullable=False)
-    tool_id = Column(String(36), ForeignKey("tools.id", ondelete="SET NULL"), nullable=True)
+    tool_id = Column(PG_UUID(as_uuid=False), ForeignKey("tools.id", ondelete="SET NULL"), nullable=True)
     tool_input = Column(SAJSON, nullable=True)
     tool_output = Column(SAJSON, nullable=True)
     status = Column(String(20), default="pending", nullable=False)
@@ -176,7 +177,7 @@ class ToolExecution(Base, PrimaryKeyMixin, TimestampMixin):
     step_id = Column(
         String(36), ForeignKey("agent_steps.id", ondelete="CASCADE"), nullable=False
     )
-    tool_id = Column(String(36), ForeignKey("tools.id", ondelete="CASCADE"), nullable=False)
+    tool_id = Column(PG_UUID(as_uuid=False), ForeignKey("tools.id", ondelete="CASCADE"), nullable=False)
     input_data = Column(SAJSON, nullable=False)
     output_data = Column(SAJSON, nullable=True)
     status = Column(String(20), default="pending", nullable=False)
