@@ -148,15 +148,10 @@ def create_default_roles(db: Session, permissions_map: dict) -> dict:
                 is_default=is_default,
             )
             db.add(role)
+            db.flush()  # Flush immediately to get the ID
             roles_map[name] = role
     
-    db.commit()
-    
-    # Reload fresh data from database to ensure we have correct IDs
-    all_roles = db.query(Role).all()
-    for role in all_roles:
-        roles_map[role.name] = role
-    
+    # Refresh permissions map from DB to ensure we have persisted objects with IDs
     all_permissions = db.query(Permission).all()
     permissions_map = {perm.name: perm for perm in all_permissions}
     
@@ -165,20 +160,26 @@ def create_default_roles(db: Session, permissions_map: dict) -> dict:
         role = roles_map[name]
         for perm_name in perm_names:
             if perm_name in permissions_map:
-                perm_id = permissions_map[perm_name].id
+                perm = permissions_map[perm_name]
                 # Check if the role_permission already exists
                 existing_rp = db.query(RolePermission).filter(
                     RolePermission.role_id == role.id,
-                    RolePermission.permission_id == perm_id
+                    RolePermission.permission_id == perm.id
                 ).first()
                 if not existing_rp:
                     role_permission = RolePermission(
                         role_id=role.id,
-                        permission_id=perm_id,
+                        permission_id=perm.id,
                     )
                     db.add(role_permission)
+                    db.flush()  # Flush each one to catch FK issues early
     
     db.commit()
+    
+    # Reload fresh data from database to ensure we have correct IDs
+    all_roles = db.query(Role).all()
+    for role in all_roles:
+        roles_map[role.name] = role
     
     return roles_map
 

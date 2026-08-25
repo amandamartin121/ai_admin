@@ -24,7 +24,7 @@ class User(Base, PrimaryKeyMixin, TimestampMixin):
 
     __tablename__ = "users"
 
-    email = Column(String(255), unique=True, index=True, nullable=False)
+    email = Column(String(255), unique=True, nullable=False)
     username = Column(String(100), nullable=False)
     hashed_password = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
@@ -40,7 +40,7 @@ class User(Base, PrimaryKeyMixin, TimestampMixin):
 
     # Indexes
     __table_args__ = (
-        Index("ix_users_email", "email"),
+        Index("ix_users_email", "email", unique=True),
         Index("ix_users_is_active", "is_active"),
     )
 
