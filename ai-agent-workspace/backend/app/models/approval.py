@@ -2,9 +2,9 @@
 ApprovalRequest model for agent tool approval workflow.
 """
 
-from sqlalchemy import Column, String, Text, Boolean, ForeignKey, Index, Enum as SQLEnum
+from sqlalchemy import Column, String, Text, Boolean, ForeignKey, Index, Enum as SQLEnum, DateTime
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import JSON as SAJSON
 import enum
 
 from app.models.base import Base, PrimaryKeyMixin, TimestampMixin
@@ -43,9 +43,9 @@ class ApprovalRequest(Base, PrimaryKeyMixin, TimestampMixin):
         SQLEnum(ApprovalStatus), default=ApprovalStatus.PENDING, nullable=False
     )
     approved_by = Column(String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    approved_at = Column(Index, nullable=True)
-    expires_at = Column(Index, nullable=False)
-    metadata_json = Column(JSONB, nullable=True)
+    approved_at = Column(DateTime, nullable=True)
+    expires_at = Column(DateTime, nullable=False)
+    metadata_json = Column(SAJSON, nullable=True)
 
     # Relationships
     run = relationship("AgentRun")

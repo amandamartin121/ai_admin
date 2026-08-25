@@ -20,6 +20,8 @@ from app.api.files import router as files_router
 
 
 # Configure structured logging
+import logging
+
 structlog.configure(
     processors=[
         structlog.contextvars.merge_contextvars,
@@ -29,7 +31,7 @@ structlog.configure(
         structlog.processors.TimeStamper(fmt="iso"),
         structlog.dev.ConsoleRenderer(),
     ],
-    wrapper_class=structlog.make_filtering_bound_logger(getattr(structlog, settings.log_level.upper())),
+    wrapper_class=structlog.make_filtering_bound_logger(logging.getLevelName(settings.log_level.upper())),
     context_class=dict,
     logger_factory=structlog.PrintLoggerFactory(),
     cache_logger_on_first_use=False,

@@ -62,8 +62,7 @@ def init_db() -> None:
     """Initialize database tables."""
     from app.models.base import Base
     from app.models.user import User
-    from app.models.role import Role
-    from app.models.permission import Permission
+    from app.models.role import Role, Permission
     from app.models.session import Session as SessionModel
     from app.models.conversation import Conversation, Message
     from app.models.file import File
