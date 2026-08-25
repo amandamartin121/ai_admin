@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai_agent_workspace_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_agent_workspace
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: ai_agent_workspace_backend
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ai_agent_workspace
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-key-change-in-production}
+      JWT_ACCESS_EXPIRE_MINUTES: 30
+      JWT_REFRESH_EXPIRE_DAYS: 7
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: https://api.openai.com/v1
+      DEFAULT_MODEL: gpt-4o-mini
+      CORS_ORIGINS: http://localhost:5173,http://localhost:1420
+      FILE_STORAGE_PATH: /app/uploads
+      MAX_UPLOAD_SIZE: 10485760
+      ENVIRONMENT: development
+      LOG_LEVEL: INFO
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head &&
+             python -m app.core.seed &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  postgres_data:
+  backend_uploads:
