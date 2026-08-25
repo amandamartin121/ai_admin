@@ -1,25 +1,33 @@
 ```
-# Database
-*.db
-
 # Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.pyc.*
+*.pyo.*
 .Python
-env/
 venv/
 .venv/
-.ENV
-.ENV.*
-.venv.bak/
-env.bak/
+.env
+.env.local
+.env.*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
 
 # Logs
 *.log
 
-# OS generated files
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
 .DS_Store?
 ._*
@@ -28,8 +36,17 @@ env.bak/
 ehthumbs.db
 Thumbs.db
 
-# Environment variables
-.env
-.env.local
-.env.*
+# Coverage
+.coverage
+htmlcov/
+coverage/
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Temp files
+*.tmp
+*~
 ```

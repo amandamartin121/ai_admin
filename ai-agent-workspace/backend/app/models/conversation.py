@@ -77,10 +77,10 @@ class Message(Base, PrimaryKeyMixin, TimestampMixin):
     attachments = relationship(
         "MessageAttachment", back_populates="message", cascade="all, delete-orphan"
     )
-    child_messages = relationship(
+    parent = relationship(
         "Message",
-        backref="parent",
-        remote_side="Message.parent_message_id",
+        remote_side="Message.id",
+        backref="child_messages",
         foreign_keys=[parent_message_id],
     )
 
