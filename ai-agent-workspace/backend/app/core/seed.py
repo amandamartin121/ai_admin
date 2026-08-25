@@ -66,14 +66,19 @@ def create_default_permissions(db: Session) -> dict:
     permissions_map = {}
     
     for name, description, resource, action in default_permissions:
-        perm = Permission(
-            name=name,
-            description=description,
-            resource=resource,
-            action=action,
-        )
-        db.add(perm)
-        permissions_map[name] = perm
+        # Check if permission already exists
+        existing_perm = db.query(Permission).filter(Permission.name == name).first()
+        if existing_perm:
+            permissions_map[name] = existing_perm
+        else:
+            perm = Permission(
+                name=name,
+                description=description,
+                resource=resource,
+                action=action,
+            )
+            db.add(perm)
+            permissions_map[name] = perm
     
     db.commit()
     
@@ -130,25 +135,48 @@ def create_default_roles(db: Session, permissions_map: dict) -> dict:
     
     roles_map = {}
     
+    # First create all roles (checking for existing ones)
     for name, description, is_default, perm_names in roles_data:
-        role = Role(
-            name=name,
-            description=description,
-            is_default=is_default,
-        )
-        db.add(role)
-        db.flush()
-        
-        roles_map[name] = role
-        
-        # Assign permissions
+        # Check if role already exists
+        existing_role = db.query(Role).filter(Role.name == name).first()
+        if existing_role:
+            roles_map[name] = existing_role
+        else:
+            role = Role(
+                name=name,
+                description=description,
+                is_default=is_default,
+            )
+            db.add(role)
+            roles_map[name] = role
+    
+    db.commit()
+    
+    # Reload fresh data from database to ensure we have correct IDs
+    all_roles = db.query(Role).all()
+    for role in all_roles:
+        roles_map[role.name] = role
+    
+    all_permissions = db.query(Permission).all()
+    permissions_map = {perm.name: perm for perm in all_permissions}
+    
+    # Now add role permissions after all roles are created
+    for name, description, is_default, perm_names in roles_data:
+        role = roles_map[name]
         for perm_name in perm_names:
             if perm_name in permissions_map:
-                role_permission = RolePermission(
-                    role_id=role.id,
-                    permission_id=permissions_map[perm_name].id,
-                )
-                db.add(role_permission)
+                perm_id = permissions_map[perm_name].id
+                # Check if the role_permission already exists
+                existing_rp = db.query(RolePermission).filter(
+                    RolePermission.role_id == role.id,
+                    RolePermission.permission_id == perm_id
+                ).first()
+                if not existing_rp:
+                    role_permission = RolePermission(
+                        role_id=role.id,
+                        permission_id=perm_id,
+                    )
+                    db.add(role_permission)
     
     db.commit()
     

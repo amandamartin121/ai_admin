@@ -2,9 +2,9 @@
 LLMProvider and LLMModel models for AI provider configuration.
 """
 
-from sqlalchemy import Column, String, Text, Boolean, ForeignKey, Index, UniqueConstraint, Float
+from sqlalchemy import Column, String, Text, Boolean, ForeignKey, Index, UniqueConstraint, Float, Integer
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import JSON as SAJSON
 
 from app.models.base import Base, PrimaryKeyMixin, TimestampMixin
 
@@ -23,7 +23,7 @@ class LLMProvider(Base, PrimaryKeyMixin, TimestampMixin):
     base_url = Column(String(500), nullable=False)
     api_key_encrypted = Column(Text, nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
-    config_json = Column(JSONB, nullable=True)
+    config_json = Column(SAJSON, nullable=True)
 
     # Relationships
     models = relationship("LLMModel", back_populates="provider", cascade="all, delete-orphan")
@@ -58,7 +58,7 @@ class LLMModel(Base, PrimaryKeyMixin, TimestampMixin):
     cost_per_1k_output = Column(Float, nullable=True)
     is_default = Column(Boolean, default=False, nullable=False)
     is_enabled = Column(Boolean, default=True, nullable=False)
-    capabilities_json = Column(JSONB, nullable=True)
+    capabilities_json = Column(SAJSON, nullable=True)
 
     # Relationships
     provider = relationship("LLMProvider", back_populates="models")

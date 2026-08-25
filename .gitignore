@@ -1,92 +1,47 @@
 ```
-# Dependencies
-node_modules/
-
-# Build outputs
-dist/
-build/
-coverage/
-htmlcov/
-*.log
-
-# Environment variables
-.env
-.env.local
-*.env.*
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*.tmp
-
 # Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.pyc.*
+*.pyo.*
 .Python
-env/
 venv/
 .venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
+.env
+.env.local
+.env.*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
 *.log
-.git/refs/heads/*
-!.git/refs/heads/main
-!.git/refs/heads/master
 
-# Compiled and binary files
-*.o
-*.obj
-*.exe
-*.dll
-*.so
-*.a
-*.out
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Testing
-.mypy_cache/
-.pytest_cache/
-.hypothesis/
-
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
 
-# Gradle
-.gradle/
-build/
+# Coverage
+.coverage
+htmlcov/
+coverage/
 
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# Build
+dist/
+build/
+*.egg-info/
+
+# Temp files
+*.tmp
+*~
 ```

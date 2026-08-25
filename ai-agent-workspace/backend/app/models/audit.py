@@ -2,9 +2,8 @@
 AuditLog model for security and compliance logging.
 """
 
-from sqlalchemy import Column, String, Text, ForeignKey, Index, DateTime
+from sqlalchemy import Column, String, Text, ForeignKey, Index, DateTime, JSON as SAJSON
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import JSONB
 
 from app.models.base import Base, PrimaryKeyMixin, TimestampMixin
 
@@ -63,7 +62,7 @@ class AuditLog(Base, PrimaryKeyMixin, TimestampMixin):
     ip_address = Column(String(45), nullable=True)
     user_agent = Column(String(500), nullable=True)
     status = Column(String(20), default="success", nullable=False)  # success, failure, denied
-    metadata_json = Column(JSONB, nullable=True)
+    metadata_json = Column(SAJSON, nullable=True)
 
     # Relationships
     actor = relationship("User", back_populates="audit_logs")
